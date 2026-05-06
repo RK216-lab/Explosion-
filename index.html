@@ -680,7 +680,8 @@
       renderRanking();
       document.getElementById('userName').value = '';
       showToast('すごーい！保存したよ！');
-      sendToGAS(record);
+			await sendToGAS(record);
+			await fetchFromGAS(); // ←追加
     };
 
     document.getElementById('clearBtn').onclick = async () => {
@@ -693,14 +694,18 @@
     };
 
     // Start
-    loadLocalResults();
-    renderRanking();
-    setupDraggableLine(line0m);
-    setupDraggableLine(line1m);
-    initCamera();
-    saveBtn.disabled = true;
-    setMode('camera');
-    setInterval(fetchFromGAS, 3000);
+    (async () => {
+  loadLocalResults();
+  renderRanking();
+  setupDraggableLine(line0m);
+  setupDraggableLine(line1m);
+
+  await fetchFromGAS(); // ←初回は取得
+
+  initCamera();
+  saveBtn.disabled = true;
+  setMode('camera');
+})();
   </script>
 </body>
 </html>
