@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>めざせ！ふわふわジャンプ王国</title>
+  <title>めざせ！爆発缶チャンピオン</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,8 +171,7 @@
           <span class="text-xs md:text-sm text-[#8b6a57]">文化祭モード</span>
           <span>🫧</span>
         </div>
-        <h1 class="text-3xl md:text-5xl font-bold text-[#ff8f8f] cute-title-shadow mb-1">めざせ！ふわふわジャンプ王国</h1>
-        <p class="text-xs md:text-sm text-[#a07a68]">iPadでも使いやすい、かんたん操作の記録画面✨</p>
+        <h1 class="text-3xl md:text-5xl font-bold text-[#ff8f8f] cute-title-shadow mb-1">めざせ！爆発缶チャンピオン</h1>
       </header>
 
       <main class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 flex-1 min-h-0">
@@ -270,11 +269,11 @@
 
   <script>
     // ==============================
-    // ここを設定するとGAS連携できます
+    // GAS連携
     // ==============================
     const GAS_CONFIG = {
       ENABLE_UPLOAD: true,
-      // GASのWebアプリURLを貼り付けてください
+      // GASのWebアプリURL
       WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxeXRjo3oXn9f881i1eIIYgyNhv0GygmB_mSF-8vCXnLTSQI29rS5UuEktvKdQy5WcWGw/exec',
       // 共有したくないなら、GAS側とこの文字をそろえる簡易キー
       SECRET: 'chiikawa-jump-2026'
@@ -477,26 +476,27 @@
     }
 
     async function sendToGAS(record) {
-      if (!GAS_CONFIG.ENABLE_UPLOAD) return;
-      if (!GAS_CONFIG.WEB_APP_URL || GAS_CONFIG.WEB_APP_URL.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) return;
+  if (!GAS_CONFIG.ENABLE_UPLOAD) return;
+  if (!GAS_CONFIG.WEB_APP_URL) return;
 
-      try {
-        await fetch(GAS_CONFIG.WEB_APP_URL, {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            secret: GAS_CONFIG.SECRET,
-            action: 'save',
-            app: 'chiikawa-jump-rank',
-            record
-          })
-        });
-      } catch (err) {
-        console.warn('GAS send failed:', err);
-      }
-    }
+  try {
+    await fetch(GAS_CONFIG.WEB_APP_URL, {
+      method: 'POST',
+      mode: 'no-cors', // ←これが超重要
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8' // ←これも重要
+      },
+      body: JSON.stringify({
+        secret: GAS_CONFIG.SECRET,
+        action: 'save',
+        app: 'chiikawa-jump-rank',
+        record
+      })
+    });
+  } catch (err) {
+    console.warn('GAS send failed:', err);
+  }
+}
 
     async function fetchFromGAS() {
       if (!GAS_CONFIG.ENABLE_UPLOAD) return;
