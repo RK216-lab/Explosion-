@@ -501,7 +501,12 @@
             </div>
             <div class="flex-grow min-w-0">
               <div class="font-bold text-[#6f4e37] text-lg truncate">${String(r.name ?? 'ななしさん')}</div>
-              <div class="text-xs text-slate-400 font-bold">${new Date(r.time || Date.now()).toLocaleTimeString()}</div>
+              <div class="text-xs text-slate-400 font-bold">${new Date(r.time || Date.now()).toLocaleString('ja-JP', {
+  month: 'numeric',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+})}</div>
             </div>
             <div class="text-3xl font-black text-[#ff8f8f] italic whitespace-nowrap tracking-wide">
               ${Number(r.height || 0).toFixed(2)}<span class="text-sm ml-0.5 not-italic font-bold text-[#6f4e37]">m</span>
