@@ -45,13 +45,13 @@
     .soft-button {
       border-radius: 999px;
       border: 3px solid transparent;
-      box-shadow: 0 5px 0 rgba(0,0,0,.08);
-      transition: transform .08s ease, box-shadow .08s ease, opacity .2s ease;
+      box-shadow: 0 6px 0 rgba(0,0,0,.1);
+      transition: transform .05s ease, box-shadow .05s ease, opacity .2s ease;
       user-select: none;
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-    .soft-button:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.08); }
+    .soft-button:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,.1); }
     .btn-cute {
       background: linear-gradient(180deg, #ffe7c9 0%, #ffd8b3 100%);
       border-color: #ffbea0;
@@ -76,7 +76,7 @@
       position: absolute;
       left: 0;
       width: 100%;
-      height: 18px;
+      height: 24px; /* iPadの指で掴みやすいように少し太く */
       cursor: ns-resize;
       z-index: 20;
       border-radius: 999px;
@@ -89,7 +89,7 @@
       position: absolute;
       left: 16px;
       right: 16px;
-      height: 5px;
+      height: 6px;
       border-radius: 999px;
       background: currentColor;
       opacity: .92;
@@ -97,38 +97,39 @@
     }
     .line-label {
       position: absolute;
-      right: 12px;
+      right: 20px;
       transform: translateY(-130%);
-      font-size: 12px;
+      font-size: 14px;
       font-weight: bold;
       background: rgba(255,255,255,.96);
-      padding: 3px 10px;
+      padding: 4px 14px;
       border-radius: 999px;
       border: 2px solid currentColor;
       white-space: nowrap;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
     .tap-marker {
       position: absolute;
-      width: 24px;
-      height: 24px;
+      width: 32px; /* 少し大きめに */
+      height: 32px;
       background: var(--accent);
-      border: 3px solid white;
+      border: 4px solid white;
       border-radius: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
       z-index: 30;
-      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+      box-shadow: 0 4px 16px rgba(0,0,0,.2);
     }
     .tap-marker::after {
       content: "";
       position: absolute;
-      inset: -8px;
-      border: 2px solid rgba(255,153,147,.35);
+      inset: -10px;
+      border: 3px solid rgba(255,153,147,.4);
       border-radius: 50%;
     }
     .recording-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       background: #ff5b5b;
       border-radius: 50%;
       display: inline-block;
@@ -145,137 +146,149 @@
       overscroll-behavior: contain;
       touch-action: pan-y;
     }
-    .cute-title-shadow { text-shadow: 0 3px 0 rgba(255, 202, 177, .8); }
-    .camera-frame {
-      min-height: 58vh;
+    .cute-title-shadow { text-shadow: 0 4px 0 rgba(255, 202, 177, .8); }
+    
+    /* ランキング表の1位用アニメーション */
+    @keyframes crown-glow {
+      0%, 100% { transform: scale(1) rotate(-5deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
     }
-    @media (min-width: 1024px) {
-      .camera-frame {
-        min-height: 0;
-        aspect-ratio: 16 / 10;
-      }
-    }
+    .gold-medal { animation: crown-glow 2s infinite ease-in-out; }
   </style>
 </head>
 <body>
-  <div class="app-shell relative overflow-hidden">
-    <div class="absolute rounded-full w-20 h-20 bg-[#ffd1dc] top-10 left-6 opacity-25 pointer-events-none"></div>
-    <div class="absolute rounded-full w-16 h-16 bg-[#d9f3ff] top-24 right-8 opacity-25 pointer-events-none"></div>
-    <div class="absolute rounded-full w-14 h-14 bg-[#fff0b8] bottom-20 left-10 opacity-25 pointer-events-none"></div>
-    <div class="absolute rounded-full w-24 h-24 bg-[#d5f0df] bottom-10 right-10 opacity-25 pointer-events-none"></div>
+  <div class="app-shell relative overflow-hidden flex flex-col p-4 md:p-6">
+    <!-- 装飾用の背景の丸 -->
+    <div class="absolute rounded-full w-32 h-32 bg-[#ffd1dc] top-10 left-6 opacity-25 pointer-events-none"></div>
+    <div class="absolute rounded-full w-24 h-24 bg-[#d9f3ff] top-24 right-8 opacity-25 pointer-events-none"></div>
+    <div class="absolute rounded-full w-20 h-20 bg-[#fff0b8] bottom-20 left-10 opacity-25 pointer-events-none"></div>
+    <div class="absolute rounded-full w-36 h-36 bg-[#d5f0df] bottom-10 right-10 opacity-25 pointer-events-none"></div>
 
-    <div id="app" class="max-w-6xl mx-auto h-full flex flex-col p-3 md:p-5 relative z-10">
-      <header class="text-center mb-3 md:mb-4 shrink-0">
-        <div class="inline-flex items-center gap-2 ghost-pill px-4 py-2 mb-3">
-          <span>🫧</span>
-          <span class="text-xs md:text-sm text-[#8b6a57]">文化祭モード</span>
-          <span>🫧</span>
+    <!-- ヘッダー（高さを固定せず、余白をiPad用に最適化） -->
+    <header class="text-center mb-4 shrink-0 flex flex-col items-center">
+      <div class="inline-flex items-center gap-2 ghost-pill px-5 py-1.5 mb-1">
+        <span class="text-lg">🫧</span>
+        <span class="text-sm text-[#8b6a57] tracking-wider">文化祭モード</span>
+        <span class="text-lg">🫧</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-[#ff8f8f] cute-title-shadow">めざせ！爆発缶チャンピオン</h1>
+    </header>
+
+    <!-- メインレイアウト（iPadの横画面を活かす左右2カラム固定） -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-0">
+      
+      <!-- 左側：カメラ・ビデオ・計測エリア (7つ分の幅) -->
+      <section class="lg:col-span-7 flex flex-col gap-4 min-h-0">
+        <!-- プレビュー画面（ここを大きく広げて視認性アップ） -->
+        <div id="displayArea" class="relative fluffy-card overflow-hidden flex-1 bg-[#fcf9f5] flex items-center justify-center">
+          <video id="mainVideo" class="w-full h-full object-contain bg-black hidden"></video>
+          <video id="cameraPreview" class="w-full h-full object-cover bg-[#eee] object-center" autoplay playsinline muted></video>
+
+          <!-- 計測線のオーバーレイ -->
+          <div id="calibrationGroup" class="hidden">
+            <div id="line1m" class="guide-line text-sky-500" style="top: 32%;">
+              <span class="line-label text-sky-500">1.0m くらい</span>
+            </div>
+            <div id="line0m" class="guide-line text-amber-500" style="top: 80%;">
+              <span class="line-label text-amber-500">じめん</span>
+            </div>
+          </div>
+
+          <!-- タップ位置マーカー -->
+          <div id="markerLayer" class="absolute inset-0 pointer-events-none"></div>
+
+          <!-- 録画中ステータス -->
+          <div id="recordingUI" class="absolute top-4 left-4 hidden items-center gap-2 bg-white/90 px-5 py-2.5 rounded-full border-2 border-[#ff9f9a] shadow-md">
+            <span class="recording-dot"></span>
+            <span class="text-[#ff6f6f] font-bold text-base">ろくがちゅう...</span>
+          </div>
         </div>
-        <h1 class="text-3xl md:text-5xl font-bold text-[#ff8f8f] cute-title-shadow mb-1">めざせ！爆発缶チャンピオン</h1>
-      </header>
 
-      <main class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 flex-1 min-h-0">
-        <section class="lg:col-span-2 flex flex-col gap-4 min-h-0">
-          <div id="displayArea" class="relative fluffy-card overflow-hidden camera-frame">
-            <video id="mainVideo" class="w-full h-full object-contain bg-black hidden"></video>
-            <video id="cameraPreview" class="w-full h-full object-cover bg-[#eee] object-center" autoplay playsinline muted></video>
-
-            <div id="calibrationGroup" class="hidden">
-              <div id="line1m" class="guide-line text-sky-500" style="top: 32%;">
-                <span class="line-label text-sky-500">1.0m くらい</span>
-              </div>
-              <div id="line0m" class="guide-line text-amber-500" style="top: 80%;">
-                <span class="line-label text-amber-500">じめん</span>
-              </div>
-            </div>
-
-            <div id="markerLayer" class="absolute inset-0 pointer-events-none"></div>
-
-            <div id="recordingUI" class="absolute top-4 left-4 hidden items-center gap-2 bg-white/85 px-4 py-2 rounded-full border-2 border-[#ff9f9a]">
-              <span class="recording-dot"></span>
-              <span class="text-[#ff6f6f] font-bold text-sm">ろくがちゅう...</span>
-            </div>
+        <!-- 下部コントローラー -->
+        <div class="fluffy-card p-4 space-y-4 shrink-0">
+          <div class="flex gap-3 justify-center">
+            <button id="modeCam" class="soft-button btn-cute px-8 py-2.5 text-lg font-bold">📷 カメラ</button>
+            <button id="modeVideo" class="soft-button bg-white border-2 border-[#e9d7c8] px-8 py-2.5 text-lg font-bold text-[#a7a7a7]">📐 計測モード</button>
           </div>
 
-          <div class="fluffy-card p-4 md:p-5 space-y-4 min-h-0">
-            <div class="flex gap-3 justify-center flex-wrap">
-              <button id="modeCam" class="soft-button btn-cute px-5 py-2 font-bold">カメラ</button>
-              <button id="modeVideo" class="soft-button bg-white border-2 border-[#e9d7c8] px-5 py-2 font-bold text-[#a7a7a7]">計測モード</button>
-            </div>
+          <!-- カメラ操作パネル -->
+          <div id="camControls" class="flex flex-wrap justify-center gap-4">
+            <button id="startRecordBtn" class="soft-button btn-pink text-white px-8 py-3.5 text-lg font-bold flex items-center gap-2">
+              <span class="text-xl">●</span> ろくが はじめる
+            </button>
+            <button id="stopRecordBtn" class="soft-button bg-slate-400 text-white px-8 py-3.5 text-lg font-bold hidden">⏹ とめる</button>
+            <label class="soft-button btn-sky px-6 py-3.5 text-lg font-bold cursor-pointer">
+              📁 ファイルから選ぶ
+              <input type="file" id="videoInput" accept="video/*" class="hidden">
+            </label>
+          </div>
 
-            <div id="camControls" class="flex flex-wrap justify-center gap-3">
-              <button id="startRecordBtn" class="soft-button btn-pink text-white px-6 py-3 font-bold flex items-center gap-2">
-                <span>●</span> ろくが はじめる
+          <!-- 計測操作パネル（iPad用にボタンサイズ・配置を調整） -->
+          <div id="measureControls" class="hidden space-y-3">
+            <div class="flex items-center gap-4">
+              <button id="playPauseBtn" class="soft-button btn-cute w-14 h-14 flex items-center justify-center font-black text-xl shrink-0">
+                <span id="playIcon">▶</span>
               </button>
-              <button id="stopRecordBtn" class="soft-button bg-slate-400 text-white px-6 py-3 font-bold hidden">とめる</button>
-              <label class="soft-button btn-sky px-5 py-3 font-bold cursor-pointer">
-                ファイルから選ぶ
-                <input type="file" id="videoInput" accept="video/*" class="hidden">
-              </label>
+              <input type="range" id="videoSeek" min="0" max="1000" value="0" class="flex-1 h-4 bg-amber-50 rounded-lg appearance-none cursor-pointer border border-amber-100">
             </div>
-
-            <div id="measureControls" class="hidden space-y-4 min-h-0">
-              <div class="flex items-center gap-3">
-                <button id="playPauseBtn" class="soft-button btn-cute w-12 h-12 flex items-center justify-center font-black">
-                  <span id="playIcon">▶</span>
-                </button>
-                <input type="range" id="videoSeek" min="0" max="1000" value="0" class="flex-1 h-3 bg-amber-50 rounded-lg appearance-none cursor-pointer border border-amber-100">
+            <div class="flex justify-between items-center gap-3">
+              <div class="flex gap-3">
+                <button id="stepBack" class="soft-button bg-white border-2 border-[#e9d7c8] px-5 py-3 text-sm font-bold">◀ ちょこっと戻る</button>
+                <button id="stepForward" class="soft-button bg-white border-2 border-[#e9d7c8] px-5 py-3 text-sm font-bold">ちょこっと進む ▶</button>
               </div>
-              <div class="flex justify-between items-center gap-3">
-                <div class="flex gap-2 flex-wrap">
-                  <button id="stepBack" class="soft-button bg-white border-2 border-[#e9d7c8] px-4 py-2 text-xs font-bold">◀ ちょこっと戻る</button>
-                  <button id="stepForward" class="soft-button bg-white border-2 border-[#e9d7c8] px-4 py-2 text-xs font-bold">ちょこっと進む ▶</button>
-                </div>
-                <span id="timeDisplay" class="text-xs md:text-sm font-bold text-[#b39a8b] whitespace-nowrap">00:00 / 00:00</span>
-              </div>
+              <span id="timeDisplay" class="text-sm md:text-base font-bold text-[#b39a8b] bg-white px-4 py-2 rounded-full border border-amber-100">00:00 / 00:00</span>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <aside class="flex flex-col gap-4 min-h-0">
-          <div class="fluffy-card p-4 md:p-5">
-            <h3 class="text-lg md:text-xl font-bold mb-3 text-[#ff8f8f] flex items-center gap-2">
-              <span>✨</span> だれが跳んだ？
-            </h3>
+      <!-- 右側：名前入力・計測データ・ランキング表 (5つ分の幅) -->
+      <aside class="lg:col-span-5 flex flex-col gap-4 min-h-0">
+        <!-- 記録保存パネル -->
+        <div class="fluffy-card p-4 space-y-3 shrink-0">
+          <h3 class="text-xl font-bold text-[#ff8f8f] flex items-center gap-2">
+            <span>✨</span> だれが跳んだ？
+          </h3>
+          <input type="text" id="userName" placeholder="なまえをいれてね"
+            class="w-full bg-white border-2 border-[#ffe0b2] rounded-2xl px-4 py-3.5 text-base focus:outline-none focus:border-[#ffbfa3] placeholder:text-slate-300">
 
-            <div class="space-y-4">
-              <input type="text" id="userName" placeholder="なまえをいれてね"
-                class="w-full bg-white border-2 border-[#ffe0b2] rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-[#ffbfa3] placeholder:text-slate-300">
-
-              <div class="p-5 bg-white rounded-3xl border-2 border-[#ffe0b2] text-center">
-                <div class="text-xs text-amber-700/60 font-bold mb-1">今回のきろく</div>
-                <div class="text-4xl md:text-5xl font-black text-[#6f4e37]"><span id="currentJumpHeight">0.00</span><span class="text-lg ml-1 font-bold">m</span></div>
-              </div>
-
-              <button id="saveBtn" class="soft-button btn-cute w-full font-bold py-4 text-lg disabled:opacity-35 disabled:cursor-not-allowed">ランキングに のせる！</button>
+          <div class="grid grid-cols-10 gap-3 items-center p-4 bg-white rounded-2xl border-2 border-[#ffe0b2]">
+            <div class="col-span-4 text-center border-r-2 border-amber-50">
+              <div class="text-xs text-amber-700/60 font-bold mb-1">今回のきろく</div>
+              <div class="text-3xl md:text-4xl font-black text-[#6f4e37]"><span id="currentJumpHeight">0.00</span><span class="text-base ml-0.5 font-bold">m</span></div>
+            </div>
+            <div class="col-span-6 pl-2">
+              <button id="saveBtn" class="soft-button btn-cute w-full font-bold py-3.5 text-base disabled:opacity-35 disabled:cursor-not-allowed">ランキングに のせる！</button>
             </div>
           </div>
+        </div>
 
-          <div class="fluffy-card p-4 md:p-5 flex flex-col min-h-0 flex-1">
-            <div class="flex justify-between items-end mb-3 shrink-0">
-              <h3 class="text-lg md:text-xl font-bold text-[#ff8f8f]">🏆 ランキング</h3>
-              <button id="clearBtn" class="text-[10px] text-slate-300 hover:text-red-300">ぜんぶ消す</button>
-            </div>
-            <div id="rankingList" class="flex-1 min-h-0 space-y-3 overflow-y-auto pr-2">
-              <div class="text-center py-10 text-slate-300 text-sm italic font-bold">まだだれもいないよ...</div>
-            </div>
+        <!-- ランキング表（高さを大きく、見やすく拡張） -->
+        <div class="fluffy-card p-5 flex flex-col min-h-0 flex-1">
+          <div class="flex justify-between items-end mb-3 shrink-0">
+            <h3 class="text-xl font-bold text-[#ff8f8f] flex items-center gap-2">🏆 ランキング</h3>
+            <button id="clearBtn" class="text-xs text-slate-300 hover:text-red-400 font-bold px-2 py-1">ぜんぶ消す</button>
           </div>
-        </aside>
-      </main>
-    </div>
-
-    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-[#8fd8ff] text-white px-6 py-3 rounded-full shadow-xl opacity-0 transition-all pointer-events-none z-50 font-bold border-4 border-white">すごーい！保存したよ！</div>
+          
+          <!-- スクロール可能なランキングリスト本体 -->
+          <div id="rankingList" class="flex-1 min-h-0 space-y-3 overflow-y-auto pr-1">
+            <div class="text-center py-12 text-slate-300 text-sm font-bold">まだだれもいないよ...</div>
+          </div>
+        </div>
+      </aside>
+    </main>
   </div>
+
+  <!-- トースト通知 -->
+  <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-[#8fd8ff] text-white px-8 py-4 rounded-full shadow-2xl opacity-0 transition-all duration-300 pointer-events-none z-50 text-lg font-bold border-4 border-white">すごーい！保存したよ！</div>
 
   <script>
     // ==============================
-    // GAS連携
+    // GAS連携設定
     // ==============================
     const GAS_CONFIG = {
       ENABLE_UPLOAD: true,
-      // GASのWebアプリURL
       WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxeXRjo3oXn9f881i1eIIYgyNhv0GygmB_mSF-8vCXnLTSQI29rS5UuEktvKdQy5WcWGw/exec',
-      // 共有したくないなら、GAS側とこの文字をそろえる簡易キー
       SECRET: 'chiikawa-jump-2026'
     };
 
@@ -406,8 +419,8 @@
         measureControls.classList.add('hidden');
         calibGroup.classList.add('hidden');
 
-        modeCam.className = 'soft-button btn-cute px-5 py-2 font-bold';
-        modeVideo.className = 'soft-button bg-white border-2 border-[#e9d7c8] px-5 py-2 font-bold text-[#a7a7a7]';
+        modeCam.className = 'soft-button btn-cute px-8 py-2.5 text-lg font-bold';
+        modeVideo.className = 'soft-button bg-white border-2 border-[#e9d7c8] px-8 py-2.5 text-lg font-bold text-[#a7a7a7]';
       } else {
         preview.classList.add('hidden');
         video.classList.remove('hidden');
@@ -415,8 +428,8 @@
         measureControls.classList.remove('hidden');
         calibGroup.classList.remove('hidden');
 
-        modeVideo.className = 'soft-button btn-cute px-5 py-2 font-bold';
-        modeCam.className = 'soft-button bg-white border-2 border-[#e9d7c8] px-5 py-2 font-bold text-[#a7a7a7]';
+        modeVideo.className = 'soft-button btn-cute px-8 py-2.5 text-lg font-bold';
+        modeCam.className = 'soft-button bg-white border-2 border-[#e9d7c8] px-8 py-2.5 text-lg font-bold text-[#a7a7a7]';
       }
     }
 
@@ -453,55 +466,72 @@
       return parseFloat(val);
     }
 
+    // ランキング描画部分（iPad用にサイズ・メダル視認性を大幅強化）
     function renderRanking() {
       if (state.results.length === 0) {
-        rankingList.innerHTML = '<div class="text-center py-10 text-slate-300 text-sm italic font-bold">まだだれもいないよ...</div>';
+        rankingList.innerHTML = '<div class="text-center py-12 text-slate-300 text-sm font-bold">まだだれもいないよ...</div>';
         return;
       }
 
-      rankingList.innerHTML = state.results.map((r, i) => `
-        <div class="flex items-center gap-3 bg-white p-4 rounded-[1.4rem] border-2 border-[#ffe0b2] shadow-sm">
-          <div class="w-10 h-10 shrink-0 flex items-center justify-center rounded-full ${i === 0 ? 'bg-amber-300' : 'bg-amber-100'} text-white font-black">
-            ${i === 0 ? '👑' : i + 1}
+      rankingList.innerHTML = state.results.map((r, i) => {
+        let medalClass = 'bg-amber-100 text-[#6f4e37]';
+        let medalLabel = i + 1;
+        let cardBorder = 'border-[#ffe0b2]';
+        let cardBg = 'bg-white';
+
+        if (i === 0) {
+          medalClass = 'bg-gradient-to-br from-yellow-300 to-amber-500 text-white font-black text-xl gold-medal shadow-md';
+          medalLabel = '👑';
+          cardBorder = 'border-amber-400 border-3';
+          cardBg = 'bg-amber-50/50';
+        } else if (i === 1) {
+          medalClass = 'bg-gradient-to-br from-slate-200 to-slate-400 text-white font-black text-lg';
+          medalLabel = '🥈';
+          cardBorder = 'border-slate-300';
+        } else if (i === 2) {
+          medalClass = 'bg-gradient-to-br from-amber-600 to-amber-800 text-white font-black text-lg';
+          medalLabel = '🥉';
+          cardBorder = 'border-amber-700/40';
+        }
+
+        return `
+          <div class="flex items-center gap-4 ${cardBg} p-4 rounded-[1.4rem] border-2 ${cardBorder} shadow-sm">
+            <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded-full ${medalClass}">
+              ${medalLabel}
+            </div>
+            <div class="flex-grow min-w-0">
+              <div class="font-bold text-[#6f4e37] text-lg truncate">${String(r.name ?? 'ななしさん')}</div>
+              <div class="text-xs text-slate-400 font-bold">${new Date(r.time || Date.now()).toLocaleTimeString()}</div>
+            </div>
+            <div class="text-3xl font-black text-[#ff8f8f] italic whitespace-nowrap tracking-wide">
+              ${Number(r.height || 0).toFixed(2)}<span class="text-sm ml-0.5 not-italic font-bold text-[#6f4e37]">m</span>
+            </div>
           </div>
-          <div class="flex-grow min-w-0">
-            <div class="font-bold text-[#6f4e37] truncate">${String(r.name ?? 'ななしさん')}</div>
-            <div class="text-[10px] text-slate-300 font-bold">${new Date(r.time || Date.now()).toLocaleTimeString()}</div>
-          </div>
-          <div class="text-2xl font-black text-[#ff8f8f] italic whitespace-nowrap">
-            ${Number(r.height || 0).toFixed(2)}<span class="text-xs ml-1 not-italic">m</span>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     async function sendToGAS(record) {
-  if (!GAS_CONFIG.ENABLE_UPLOAD) return;
-  if (!GAS_CONFIG.WEB_APP_URL) return;
-
-  try {
-    await fetch(GAS_CONFIG.WEB_APP_URL, {
-      method: 'POST',
-      mode: 'no-cors', // ←これが超重要
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8' // ←これも重要
-      },
-      body: JSON.stringify({
-        secret: GAS_CONFIG.SECRET,
-        action: 'save',
-        app: 'chiikawa-jump-rank',
-        record
-      })
-    });
-  } catch (err) {
-    console.warn('GAS send failed:', err);
-  }
-}
+      if (!GAS_CONFIG.ENABLE_UPLOAD || !GAS_CONFIG.WEB_APP_URL) return;
+      try {
+        await fetch(GAS_CONFIG.WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            secret: GAS_CONFIG.SECRET,
+            action: 'save',
+            app: 'chiikawa-jump-rank',
+            record
+          })
+        });
+      } catch (err) {
+        console.warn('GAS send failed:', err);
+      }
+    }
 
     async function fetchFromGAS() {
-      if (!GAS_CONFIG.ENABLE_UPLOAD) return;
-      if (!GAS_CONFIG.WEB_APP_URL || GAS_CONFIG.WEB_APP_URL.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) return;
-
+      if (!GAS_CONFIG.ENABLE_UPLOAD || !GAS_CONFIG.WEB_APP_URL) return;
       try {
         const url = `${GAS_CONFIG.WEB_APP_URL}?action=list&secret=${encodeURIComponent(GAS_CONFIG.SECRET)}&app=chiikawa-jump-rank`;
         const res = await fetch(url, { method: 'GET', cache: 'no-cache' });
@@ -680,8 +710,8 @@
       renderRanking();
       document.getElementById('userName').value = '';
       showToast('すごーい！保存したよ！');
-			await sendToGAS(record);
-			await fetchFromGAS(); // ←追加
+      await sendToGAS(record);
+      await fetchFromGAS();
     };
 
     document.getElementById('clearBtn').onclick = async () => {
@@ -693,19 +723,19 @@
       }
     };
 
-    // Start
+    // 初期化処理
     (async () => {
-  loadLocalResults();
-  renderRanking();
-  setupDraggableLine(line0m);
-  setupDraggableLine(line1m);
+      loadLocalResults();
+      renderRanking();
+      setupDraggableLine(line0m);
+      setupDraggableLine(line1m);
 
-  await fetchFromGAS(); // ←初回は取得
+      await fetchFromGAS();
 
-  initCamera();
-  saveBtn.disabled = true;
-  setMode('camera');
-})();
+      initCamera();
+      saveBtn.disabled = true;
+      setMode('camera');
+    })();
   </script>
 </body>
 </html>
