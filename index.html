@@ -218,7 +218,7 @@
 
           <div id="calibrationGroup" class="hidden absolute inset-0 pointer-events-none">
             <div id="line1m" class="guide-line text-sky-400 pointer-events-auto" style="top: 30%;">
-              <span class="line-label text-sky-400">1.0m のめやす</span>
+              <span class="line-label text-sky-400">キムワイプのたかさ/span>
             </div>
             <div id="line0m" class="guide-line text-amber-400 pointer-events-auto" style="top: 80%;">
               <span class="line-label text-amber-400">じめん (0m)</span>
@@ -285,7 +285,7 @@
           <div class="grid grid-cols-10 gap-3 items-center p-4 bg-[#fffefb] rounded-2xl border-3 border-[#ffe2bf]">
             <div class="col-span-4 text-center border-r-3 border-[#ffe2bf]">
               <div class="text-sm text-amber-800/70 font-bold mb-1">とんだ高さ</div>
-              <div class="text-4xl font-black text-[#6f4e37] font-['Yusei_Magic']"><span id="currentJumpHeight">0.00</span><span class="text-lg ml-0.5 font-bold">m</span></div>
+              <div class="text-4xl font-black text-[#6f4e37] font-['Yusei_Magic']"><span id="currentJumpHeight">0.00</span><span class="text-lg ml-0.5 font-bold">cm</span></div>
             </div>
             <div class="col-span-6 pl-2">
               <button id="saveBtn" class="soft-button btn-cute w-full font-bold py-4 text-lg" disabled>ランキングに のる！🏆</button>
@@ -319,7 +319,7 @@
     <div class="max-w-4xl w-full mx-auto flex flex-col h-full relative z-10">
       <div class="flex justify-between items-center mb-8 shrink-0">
         <h2 class="text-4xl md:text-5xl font-bold text-[#ff8f8f] cute-title-shadow tracking-wider flex items-center gap-3">
-          👑 爆発缶チャンピオンシップ ランキング
+          👑 爆発缶ランキング
         </h2>
         <button id="closeExpandBtn" class="soft-button btn-pink text-white px-8 py-3 text-xl font-bold">
           ❌ とじる
@@ -511,18 +511,21 @@
     }
 
     function calculateHeight() {
-      const y0 = line0m.offsetTop + 16;
-      const y1 = line1m.offsetTop + 16;
-      const peak = state.currentY;
-      
-      if (y0 === y1 || peak === 0) return 0;
+  const y0 = line0m.offsetTop + 16;
+  const y1 = line1m.offsetTop + 16;
+  const peak = state.currentY;
 
-      const pxPerMeter = Math.abs(y0 - y1);
-      const height = (y0 - peak) / pxPerMeter;
-      const val = Math.max(0, height).toFixed(2);
-      currentHeightEl.textContent = val;
-      return parseFloat(val);
-    }
+  if (y0 === y1 || peak === 0) return 0;
+
+  // キムワイプ高さ 9.2cm
+  const pxPerRef = Math.abs(y0 - y1);
+
+  const heightCm = ((y0 - peak) / pxPerRef) * 9.2;
+  const val = Math.max(0, heightCm).toFixed(1);
+
+  currentHeightEl.textContent = val;
+  return parseFloat(val);
+}
 
     function renderRanking() {
       if (state.results.length === 0) {
